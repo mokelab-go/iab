@@ -65,6 +65,13 @@ func (o *Verifier) parse(src string) (Receipt, error) {
 	if err != nil {
 		return Receipt{}, err
 	}
+	developerPayload := ""
+	if _, ok := json["developerPayload"]; ok {
+		developerPayload, err = json.String("developerPayload")
+		if err != nil {
+			return Receipt{}, err
+		}
+	}
 	purchaseState, err := json.Int("purchaseState")
 	if err != nil {
 		return Receipt{}, err
@@ -78,12 +85,13 @@ func (o *Verifier) parse(src string) (Receipt, error) {
 		return Receipt{}, err
 	}
 	return Receipt{
-		OrderId:       orderId,
-		PackageName:   packageName,
-		ProductId:     productId,
-		PurchaseState: purchaseState,
-		PurchaseTime:  purchaseTime,
-		PurchaseToken: purchaseToken,
+		OrderId:          orderId,
+		PackageName:      packageName,
+		ProductId:        productId,
+		DeveloperPayload: developerPayload,
+		PurchaseState:    purchaseState,
+		PurchaseTime:     purchaseTime,
+		PurchaseToken:    purchaseToken,
 	}, nil
 }
 

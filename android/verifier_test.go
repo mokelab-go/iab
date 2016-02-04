@@ -60,3 +60,23 @@ xSI3tJaufX5qePejTwIDAQAB`
 		return
 	}
 }
+
+func TestVerifier_Payload(t *testing.T) {
+	publicKey := `MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDcgE5K4uCUycylqjl047n3wmo2
+S4BRrNc4uK8PbWv8IwG+mIjr5ydmPuZUNnbNS9CJd4RjL45USlx20Ne4qzEbGoJ0
+lCRh69QwdLrvfg5rK7MLiO5ppGcGBvil4Uqpd8sE3FOow+3HwJkvdz+aYbESfG+x
+xSI3tJaufX5qePejTwIDAQAB`
+	v := NewVerifier(publicKey)
+	input := `{"orderId":"GPA.1111-2222-3333-44444","packageName":"com.mokelab.demoapp","productId":"demo_product_id","purchaseTime":1454561642505,"purchaseState":0,"developerPayload":"paylord","purchaseToken":"aaaaaaaapflgcdgpbbbbbbbb.AO-AAAABBBBBBRmJs7xFa5fyRS203c5pc_gu-djJL9cmMB5ZPq474O0kdVyVkqWCAanYDd6s6wMr1wGcBYEh0pg-qgnNp1L3qI8qjerBG_cW-AAAAAAAAvcKGJcEUKG3uAnEjeQq9JPg"}
+`
+	signature := `DQ5iGUYeUBNzby23mWVzxSJ275x8PkIF5icBw5OLPqBxZQhxE7lNwHbkLdUGKK73U6HVshdK0jnb8YfkpWYwVDAAQ+IYJVeaE7DFmONTRSFakg6aMNsU5P0T+3Ta38+BcNejVQtnMulCelDnR7ukLnLO3kuczgGuqDGWXiN7kt8=`
+	receipt, err := v.Verify(input, signature)
+	if err != nil {
+		t.Errorf("err must be nil : %s", err)
+		return
+	}
+	if receipt.DeveloperPayload != "paylord" {
+		t.Errorf("developerPayload must be %s but %s", "paylord", receipt.DeveloperPayload)
+		return
+	}
+}
