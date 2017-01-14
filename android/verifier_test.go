@@ -17,14 +17,14 @@ xSI3tJaufX5qePejTwIDAQAB`
 	if err != nil {
 		t.Errorf("verification error : %s", err)
 	}
-	if receipt.OrderId != "12999763169054705758.1371073745894165" {
-		t.Errorf("Wrong orderId : %s", receipt.OrderId)
+	if receipt.OrderID != "12999763169054705758.1371073745894165" {
+		t.Errorf("Wrong orderId : %s", receipt.OrderID)
 	}
 	if receipt.PackageName != "com.mokelab.dummyApp" {
 		t.Errorf("Wrong packageName : %s", receipt.PackageName)
 	}
-	if receipt.ProductId != "dummy_app_item" {
-		t.Errorf("Wrong productId : %s", receipt.ProductId)
+	if receipt.ProductID != "dummy_app_item" {
+		t.Errorf("Wrong productId : %s", receipt.ProductID)
 	}
 	if receipt.PurchaseState != 0 {
 		t.Errorf("Wrong purchaseState : %d", receipt.PurchaseState)
@@ -55,7 +55,7 @@ xSI3tJaufX5qePejTwIDAQAB`
 		t.Errorf("err must be VerifyError")
 		return
 	}
-	if err2.Code != ERR_VerificationFailed {
+	if err2.Code != VerificationFailed {
 		t.Errorf("Error code must be VerificationFailed but %d", err2.Code)
 		return
 	}
