@@ -11,10 +11,13 @@ import (
 	rj "github.com/fkmhrk-go/rawjson"
 )
 
+// Verifier for Android in-app billing receipt
 type Verifier struct {
 	publicKey *rsa.PublicKey
 }
 
+// NewVerifier creates Verifier. Pass Base64 public key that
+// you can get in Developer console.
 func NewVerifier(publicKey string) *Verifier {
 	key, err := readPublicKey("-----BEGIN PUBLIC KEY-----\n" + publicKey + "\n-----END PUBLIC KEY-----")
 	if err != nil {
@@ -25,6 +28,7 @@ func NewVerifier(publicKey string) *Verifier {
 	}
 }
 
+// Verify receipt JSON string
 func (o *Verifier) Verify(src, signature string) (Receipt, error) {
 	// src to digest
 	h := sha1.New()
@@ -33,17 +37,17 @@ func (o *Verifier) Verify(src, signature string) (Receipt, error) {
 	// decode signature
 	rawSignature, err := base64.StdEncoding.DecodeString(signature)
 	if err != nil {
-		return Receipt{}, newVerifyError(ERR_SignatureDecodeFailed, "Failed to decode signature", err)
+		return Receipt{}, newVerifyError(SignatureDecodeFailed, "Failed to decode signature", err)
 	}
 	// verify
 	err = rsa.VerifyPKCS1v15(o.publicKey, crypto.SHA1, digest, rawSignature)
 	if err != nil {
-		return Receipt{}, newVerifyError(ERR_VerificationFailed, "Verification failed", err)
+		return Receipt{}, newVerifyError(VerificationFailed, "Verification failed", err)
 	}
 	// parse
 	receipt, err := o.parse(src)
 	if err != nil {
-		return Receipt{}, newVerifyError(ERR_ParseFailed, "Failed to parse receipt JSON", err)
+		return Receipt{}, newVerifyError(ParseFailed, "Failed to parse receipt JSON", err)
 	}
 	return receipt, nil
 }
@@ -53,7 +57,7 @@ func (o *Verifier) parse(src string) (Receipt, error) {
 	if err != nil {
 		return Receipt{}, err
 	}
-	orderId, err := json.String("orderId")
+	orderID, err := json.String("orderId")
 	if err != nil {
 		return Receipt{}, err
 	}
@@ -61,7 +65,7 @@ func (o *Verifier) parse(src string) (Receipt, error) {
 	if err != nil {
 		return Receipt{}, err
 	}
-	productId, err := json.String("productId")
+	productID, err := json.String("productId")
 	if err != nil {
 		return Receipt{}, err
 	}
@@ -85,9 +89,9 @@ func (o *Verifier) parse(src string) (Receipt, error) {
 		return Receipt{}, err
 	}
 	return Receipt{
-		OrderId:          orderId,
+		OrderID:          orderID,
 		PackageName:      packageName,
-		ProductId:        productId,
+		ProductID:        productID,
 		DeveloperPayload: developerPayload,
 		PurchaseState:    purchaseState,
 		PurchaseTime:     purchaseTime,

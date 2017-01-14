@@ -1,9 +1,10 @@
 package android
 
+// Receipt of a purchase
 type Receipt struct {
-	OrderId          string
+	OrderID          string
 	PackageName      string
-	ProductId        string
+	ProductID        string
 	DeveloperPayload string
 	PurchaseState    int
 	PurchaseTime     int64
